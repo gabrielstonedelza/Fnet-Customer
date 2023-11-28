@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:fnet_customer/sendsms.dart';
 import 'package:fnet_customer/static/app_colors.dart';
@@ -8,30 +7,26 @@ import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-
 import 'package:pinput/pinput.dart';
-
 import 'dashboard.dart';
 
 class AuthenticateByPhone extends StatefulWidget {
-  const AuthenticateByPhone({Key? key}) : super(key: key);
+  final otp;
+  final customerNumber;
+  const AuthenticateByPhone(
+      {Key? key, required this.otp, required this.customerNumber})
+      : super(key: key);
 
   @override
-  State<AuthenticateByPhone> createState() => _AuthenticateByPhoneState();
+  State<AuthenticateByPhone> createState() => _AuthenticateByPhoneState(
+      otp: this.otp, customerNumber: this.customerNumber);
 }
 
 class _AuthenticateByPhoneState extends State<AuthenticateByPhone> {
+  final otp;
+  final customerNumber;
+  _AuthenticateByPhoneState({required this.otp, required this.customerNumber});
   final storage = GetStorage();
-  late String customerNumber = "";
-
-  late int oTP = 0;
-  final SendSmsController sendSms = SendSmsController();
-
-  generate5digit() {
-    var rng = Random();
-    var rand = rng.nextInt(9000) + 1000;
-    oTP = rand.toInt();
-  }
 
   final formKey = GlobalKey<FormState>();
   static const maxSeconds = 60;
@@ -39,6 +34,7 @@ class _AuthenticateByPhoneState extends State<AuthenticateByPhone> {
   Timer? timer;
   bool isCompleted = false;
   bool isResent = false;
+  final SendSmsController sendSms = SendSmsController();
 
   void startTimer() {
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -71,25 +67,6 @@ class _AuthenticateByPhoneState extends State<AuthenticateByPhone> {
   Timer? myTimer;
 
   @override
-  void initState() {
-    super.initState();
-    startTimer();
-    generate5digit();
-    if (storage.read("customerNumber") != null) {
-      setState(() {
-        customerNumber = storage.read("customerNumber");
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    // Cancel the timer when the widget is disposed.
-    myTimer?.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: shadow,
@@ -120,9 +97,7 @@ class _AuthenticateByPhoneState extends State<AuthenticateByPhone> {
                   androidSmsAutofillMethod:
                       AndroidSmsAutofillMethod.smsRetrieverApi,
                   validator: (pin) {
-                    if (pin?.length == 4 && pin == oTP.toString()) {
-                      storage.write("phoneAuthenticated", "Authenticated");
-
+                    if (pin?.length == 4 && pin == otp.toString()) {
                       Get.offAll(() => const DashBoard());
                     } else {
                       Get.snackbar("Code Error", "you entered an invalid code",
@@ -152,8 +127,7 @@ class _AuthenticateByPhoneState extends State<AuthenticateByPhone> {
                           onPressed: () {
                             String num =
                                 customerNumber.replaceFirst("0", '+233');
-                            sendSms.sendMySms(num, "FNET", "Your code $oTP");
-
+                            sendSms.sendMySms(num, "FNET", "Your code $otp");
                             Get.snackbar("Check Phone", "code was sent again",
                                 backgroundColor: snackBackground,
                                 colorText: defaultTextColor1,

@@ -4,6 +4,7 @@ import 'package:fnet_customer/splash.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart';
 
+import 'controllers/customercontroller.dart';
 import 'dashboard.dart';
 import 'login.dart';
 
@@ -12,6 +13,7 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await GetStorage.init();
+  Get.put(CustomerController());
   runApp(const MyApp());
 }
 
