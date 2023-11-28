@@ -209,13 +209,15 @@ class _CashSupportSummaryState extends State<CashSupportSummary> {
                 ],
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: defaultColor,
-          onPressed: () {
-            Get.to(() => const RequestCashSupport());
-          },
-          child:
-              const Icon(Icons.add_circle_outline, color: defaultTextColor1)),
+      floatingActionButton: balanceRemaining != 0.0
+          ? FloatingActionButton(
+              backgroundColor: defaultColor,
+              onPressed: () {
+                Get.to(() => const RequestCashSupport());
+              },
+              child: const Icon(Icons.add_circle_outline,
+                  color: defaultTextColor1))
+          : Container(),
     );
   }
 }
