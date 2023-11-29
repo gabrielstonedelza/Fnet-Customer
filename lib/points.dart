@@ -126,18 +126,38 @@ class _CustomerPointsState extends State<CustomerPoints> {
     }
   }
 
-  Future<void> redeemPoints() async {
-    final profileLink = "https://fnetghana.xyz/redeem_points/$customerNumber/";
-    var link = Uri.parse(profileLink);
-    http.Response response = await http.get(link, headers: {
+  Future<void> requestToRedeemPoints() async {
+    const depositUrl =
+        "https://fnetghana.xyz/customer_request_to_redeem_points/";
+    final myLink = Uri.parse(depositUrl);
+    final res = await http.post(myLink, headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+    }, body: {
+      "customer_name": controller.customerName,
+      "customer_phone": customerNumber,
+      "points": pointsTotal.toString(),
     });
-    if (response.statusCode == 200) {
+    if (res.statusCode == 201) {
+      Get.snackbar("Congratulations", "Request sent for approval",
+          colorText: defaultTextColor1,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: snackColor);
+      String telnum1 = controller.adminPhone;
+      telnum1 = telnum1.replaceFirst("0", '+233');
+      sendSms.sendMySms(telnum1, "FNET",
+          "Hello Admin,$customerNumber just made a request to redeem his points");
+
+      String telnum = customerNumber;
+      telnum = telnum.replaceFirst("0", '+233');
+      sendSms.sendMySms(telnum, "FNET",
+          "Hello,your request to redeem points is sent sucessfully,please wait, an agent will call you soon.Thank you");
+
       Get.offAll(() => const DashBoard());
     } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
+      Get.snackbar("Request Error", res.body.toString(),
+          colorText: defaultTextColor1,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: snackColor);
     }
   }
 
@@ -218,7 +238,7 @@ class _CustomerPointsState extends State<CustomerPoints> {
                                     snackPosition: SnackPosition.BOTTOM,
                                     duration: const Duration(seconds: 5),
                                     backgroundColor: snackColor);
-                                redeemPoints();
+                                requestToRedeemPoints();
                               }
                               if (pointsTotal > 50) {
                                 String telnum1 = controller.adminPhone;
@@ -231,7 +251,7 @@ class _CustomerPointsState extends State<CustomerPoints> {
                                     snackPosition: SnackPosition.BOTTOM,
                                     duration: const Duration(seconds: 5),
                                     backgroundColor: snackColor);
-                                redeemPoints();
+                                requestToRedeemPoints();
                               }
                             }
                           },
@@ -254,3 +274,7 @@ class _CustomerPointsState extends State<CustomerPoints> {
     );
   }
 }
+// proxy_connect_timeout 600;
+// proxy_send_timeout 600;
+// proxy_read_timeout 600;
+// send_timeout 600;

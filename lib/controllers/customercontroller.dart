@@ -30,6 +30,7 @@ class CustomerController extends GetxController {
   late double cashSupportInterest = 0.0;
   late double balanceRemaining = 0.0;
   late double balanceNow = 0.0;
+  late String customerName = "";
 
   @override
   void onInit() {
@@ -51,6 +52,7 @@ class CustomerController extends GetxController {
         customerDetails = jsonData;
         for (var i in customerDetails) {
           customerPoints = i['points'].toString();
+          customerName = i['name'];
         }
         update();
       } else {
