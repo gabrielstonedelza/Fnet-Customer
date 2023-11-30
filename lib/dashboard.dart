@@ -5,7 +5,7 @@ import 'package:fnet_customer/login.dart';
 import 'package:fnet_customer/points.dart';
 import 'package:fnet_customer/referfriend.dart';
 import 'package:fnet_customer/referrals.dart';
-import 'package:fnet_customer/requestcomponent.dart';
+import 'package:fnet_customer/requestdeposit.dart';
 import 'package:fnet_customer/static/app_colors.dart';
 import 'package:fnet_customer/transactionsummary.dart';
 import 'package:get_storage/get_storage.dart';
@@ -48,8 +48,6 @@ class _DashBoardState extends State<DashBoard> {
   void scheduleTimers() {
     controller.getAllBankTransactions(customerNumber);
     controller.getAllBankAccounts(customerNumber);
-    controller.getAllCashSupport(customerNumber);
-    controller.getAllCashSupportPaid(customerNumber);
     controller.getAllCustomerReferrals(customerNumber);
     controller.fetchAdmin();
     controller.getAllCommercials();
@@ -57,8 +55,6 @@ class _DashBoardState extends State<DashBoard> {
     Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       controller.getAllBankTransactions(customerNumber);
       controller.getAllBankAccounts(customerNumber);
-      controller.getAllCashSupport(customerNumber);
-      controller.getAllCashSupportPaid(customerNumber);
       controller.getAllCustomerReferrals(customerNumber);
       controller.fetchAdmin();
       controller.getAllCommercials();
@@ -98,7 +94,7 @@ class _DashBoardState extends State<DashBoard> {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          Get.to(() => const RequestComponent());
+                          Get.to(() => const RequestDeposit());
                         },
                         child: Card(
                           shape: RoundedRectangleBorder(

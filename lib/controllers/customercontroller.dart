@@ -10,8 +10,6 @@ class CustomerController extends GetxController {
   late List allBankTransactions = [];
   late List allAccounts = [];
   late List customers = [];
-  late List customersCashSupport = [];
-  late List customersCashSupportPaid = [];
   late List customerNumbers = [];
   late List customerReferrals = [];
   final List customerBanks = [
@@ -26,10 +24,6 @@ class CustomerController extends GetxController {
   late String defaultCommercialLink = "";
   late String customerPoints = "";
   late List customerDetails = [];
-  late double cashSupportAmount = 0.0;
-  late double cashSupportInterest = 0.0;
-  late double balanceRemaining = 0.0;
-  late double balanceNow = 0.0;
   late String customerName = "";
 
   @override
@@ -175,68 +169,6 @@ class CustomerController extends GetxController {
             customerBanks.add(i['bank']);
           }
         }
-        update();
-      } else {
-        if (kDebugMode) {
-          print(response.body);
-        }
-      }
-    } catch (e) {
-      // Get.snackbar("Sorry","something happened or please check your internet connection",snackPosition: SnackPosition.BOTTOM);
-    } finally {
-      isLoading = false;
-      update();
-    }
-  }
-
-  Future<void> getAllCashSupport(String phone) async {
-    try {
-      isLoading = true;
-
-      final profileLink =
-          "https://fnetghana.xyz/get_all_customers_cash_support/$phone/";
-      var link = Uri.parse(profileLink);
-      http.Response response = await http.get(link, headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      });
-      if (response.statusCode == 200) {
-        var jsonData = jsonDecode(response.body);
-        customersCashSupport = jsonData;
-        for (var i in customersCashSupport) {
-          cashSupportAmount = double.parse(i['amount']);
-          cashSupportInterest = double.parse(i['interest']);
-        }
-        update();
-      } else {
-        if (kDebugMode) {
-          print(response.body);
-        }
-      }
-    } catch (e) {
-      // Get.snackbar("Sorry","something happened or please check your internet connection",snackPosition: SnackPosition.BOTTOM);
-    } finally {
-      isLoading = false;
-      update();
-    }
-  }
-
-  Future<void> getAllCashSupportPaid(String phone) async {
-    try {
-      isLoading = true;
-
-      final profileLink =
-          "https://fnetghana.xyz/get_all_customers_cash_support_paid/$phone/";
-      var link = Uri.parse(profileLink);
-      http.Response response = await http.get(link, headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      });
-      if (response.statusCode == 200) {
-        var jsonData = jsonDecode(response.body);
-        customersCashSupportPaid = jsonData;
-        for (var i in customersCashSupportPaid) {
-          balanceRemaining = balanceRemaining + double.parse(i['amount']);
-        }
-
         update();
       } else {
         if (kDebugMode) {

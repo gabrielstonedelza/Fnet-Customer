@@ -150,7 +150,7 @@ class _CustomerPointsState extends State<CustomerPoints> {
       String telnum = customerNumber;
       telnum = telnum.replaceFirst("0", '+233');
       sendSms.sendMySms(telnum, "FNET",
-          "Hello,your request to redeem points is sent sucessfully,please wait, an agent will call you soon.Thank you");
+          "Hello,your request to redeem points is sent successfully,please wait, an agent will call you soon.Thank you");
 
       Get.offAll(() => const DashBoard());
     } else {
