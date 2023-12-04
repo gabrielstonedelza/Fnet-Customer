@@ -133,8 +133,8 @@ class _CustomerPointsState extends State<CustomerPoints> {
     final res = await http.post(myLink, headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     }, body: {
-      "customer_name": controller.customerName,
-      "customer_phone": customerNumber,
+      "name": controller.customerName,
+      "phone": customerNumber,
       "points": pointsTotal.toString(),
     });
     if (res.statusCode == 201) {
