@@ -14,6 +14,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'accounts.dart';
 import 'carouselcomponent.dart';
+import 'fetchcustomerstransactions.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({super.key});
@@ -74,11 +75,17 @@ class _DashBoardState extends State<DashBoard> {
           actions: [
             IconButton(
                 onPressed: () {
+                  Get.to(() => const FetchCashInCommissionMonthly());
+                },
+                icon: const Icon(Icons.search_outlined,
+                    color: defaultTextColor1)),
+            IconButton(
+                onPressed: () {
                   storage.remove("customerNumber");
                   Get.offAll(() => const LoginView());
                 },
                 icon:
-                    const Icon(Icons.login_outlined, color: defaultTextColor1))
+                    const Icon(Icons.login_outlined, color: defaultTextColor1)),
           ],
           backgroundColor: defaultColor,
         ),
