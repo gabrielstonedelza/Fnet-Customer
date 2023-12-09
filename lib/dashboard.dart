@@ -32,6 +32,7 @@ class _DashBoardState extends State<DashBoard> {
   final CustomerController controller = Get.find();
   late Timer _timer;
   late YoutubePlayerController _controller;
+  String initialYouTubeLink = "https://www.youtube.com/watch?v=fhIEp9iGEE4";
 
   @override
   void initState() {
@@ -41,11 +42,19 @@ class _DashBoardState extends State<DashBoard> {
         customerNumber = storage.read("customerNumber");
       });
     }
-    final videoId =
-        YoutubePlayer.convertUrlToId(controller.defaultCommercialLink);
-    _controller = YoutubePlayerController(
-        initialVideoId: videoId!,
-        flags: const YoutubePlayerFlags(autoPlay: true, loop: true));
+    if (controller.defaultCommercialLink != "") {
+      final videoId =
+          YoutubePlayer.convertUrlToId(controller.defaultCommercialLink);
+      _controller = YoutubePlayerController(
+          initialVideoId: videoId!,
+          flags: const YoutubePlayerFlags(autoPlay: true, loop: true));
+    } else {
+      final videoId = YoutubePlayer.convertUrlToId(initialYouTubeLink);
+      _controller = YoutubePlayerController(
+          initialVideoId: videoId!,
+          flags: const YoutubePlayerFlags(autoPlay: true, loop: true));
+    }
+
     scheduleTimers();
   }
 
