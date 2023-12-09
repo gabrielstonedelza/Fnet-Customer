@@ -10,11 +10,14 @@ import 'package:fnet_customer/static/app_colors.dart';
 import 'package:fnet_customer/transactionsummary.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'accounts.dart';
 import 'carouselcomponent.dart';
 import 'fetchcustomerstransactions.dart';
+import 'monthlytotaltransaction.dart';
+import 'overalltotalyearlytransactions.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({super.key});
@@ -63,6 +66,109 @@ class _DashBoardState extends State<DashBoard> {
     });
   }
 
+  void showOptions() {
+    showMaterialModalBottomSheet(
+      backgroundColor: Colors.black,
+      isDismissible: true,
+      context: context,
+      builder: (context) => Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Card(
+          color: Colors.black,
+          elevation: 12,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+          child: SizedBox(
+            height: 250,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 18.0, bottom: 18),
+                  child: Center(
+                      child: Text("Select on of the following",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: defaultTextColor1))),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                RawMaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Get.to(() => const FetchCustomerMonthlyTransactionByBank());
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  elevation: 8,
+                  fillColor: primaryColor,
+                  splashColor: defaultColor,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Search total by bank,month and year",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: Colors.white),
+                    ),
+                  ),
+                ),
+                RawMaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Get.to(() => const FetchCustomersBankTransactionsYearly());
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  elevation: 8,
+                  fillColor: primaryColor,
+                  splashColor: defaultColor,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Search total by bank and year",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: Colors.white),
+                    ),
+                  ),
+                ),
+                RawMaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Get.to(() =>
+                        const FetchCustomerYearlyOverAllTransactionByBank());
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  elevation: 8,
+                  fillColor: primaryColor,
+                  splashColor: defaultColor,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Get overall yearly total",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +181,7 @@ class _DashBoardState extends State<DashBoard> {
           actions: [
             IconButton(
                 onPressed: () {
-                  Get.to(() => const FetchCashInCommissionMonthly());
+                  showOptions();
                 },
                 icon: const Icon(Icons.search_outlined,
                     color: defaultTextColor1)),

@@ -8,19 +8,20 @@ import 'package:flutter/material.dart';
 
 import 'loadingui.dart';
 
-class FetchCustomersBankTransactionsYearly extends StatefulWidget {
-  const FetchCustomersBankTransactionsYearly({Key? key}) : super(key: key);
+class FetchCustomerMonthlyTransactionByBank extends StatefulWidget {
+  const FetchCustomerMonthlyTransactionByBank({Key? key}) : super(key: key);
 
   @override
-  State<FetchCustomersBankTransactionsYearly> createState() =>
-      _FetchCustomersBankTransactionsYearlyState();
+  State<FetchCustomerMonthlyTransactionByBank> createState() =>
+      _FetchCustomerMonthlyTransactionByBankState();
 }
 
-class _FetchCustomersBankTransactionsYearlyState
-    extends State<FetchCustomersBankTransactionsYearly> {
+class _FetchCustomerMonthlyTransactionByBankState
+    extends State<FetchCustomerMonthlyTransactionByBank> {
   bool bankSelected = false;
   final storage = GetStorage();
   late String customerNumber = "";
+  var _currentSelectedMonth = "1";
   var _currentSelectedYear = "2023";
   final _formKey = GlobalKey<FormState>();
 
@@ -39,6 +40,7 @@ class _FetchCustomersBankTransactionsYearlyState
     "2030",
   ];
 
+  String bMonth = "";
   String bYear = "";
   String bBank = "";
 
@@ -148,7 +150,7 @@ class _FetchCustomersBankTransactionsYearlyState
   // }
   Future<void> fetchAgentCashInTransactionsByMonth() async {
     final url =
-        "https://fnetghana.xyz/get_customer_transaction_by_year/$customerNumber/$bYear/$bBank/";
+        "https://fnetghana.xyz/get_customer_transaction_by_date/$customerNumber/$bMonth/$bYear/$bBank/";
     var myLink = Uri.parse(url);
     final response = await http.get(myLink);
 
@@ -245,7 +247,7 @@ class _FetchCustomersBankTransactionsYearlyState
         appBar: AppBar(
           backgroundColor: defaultColor,
           title: const Text(
-            "Search by bank and year",
+            "Search by bank,month and year",
             style: TextStyle(
                 fontWeight: FontWeight.bold, color: defaultTextColor1),
           ),
@@ -253,7 +255,7 @@ class _FetchCustomersBankTransactionsYearlyState
         body: ListView(
           children: [
             const SizedBox(height: 20),
-            Padding(
+            const Padding(
                 padding: EdgeInsets.only(left: 35.0),
                 child: Row(
                   children: [
@@ -318,6 +320,37 @@ class _FetchCustomersBankTransactionsYearlyState
                             padding:
                                 const EdgeInsets.only(left: 10.0, right: 10),
                             child: DropdownButton(
+                              hint: const Text("Month"),
+                              isExpanded: true,
+                              underline: const SizedBox(),
+                              // style: const TextStyle(
+                              //     color: Colors.black, fontSize: 20),
+                              items: months.map((dropDownStringItem) {
+                                return DropdownMenuItem(
+                                  value: dropDownStringItem,
+                                  child: Text(dropDownStringItem),
+                                );
+                              }).toList(),
+                              onChanged: (newValueSelected) {
+                                _onDropDownItemSelectedMonth(newValueSelected);
+                              },
+                              value: _currentSelectedMonth,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.grey, width: 1)),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(left: 10.0, right: 10),
+                            child: DropdownButton(
                               hint: const Text("Years"),
                               isExpanded: true,
                               underline: const SizedBox(),
@@ -348,6 +381,7 @@ class _FetchCustomersBankTransactionsYearlyState
                 onPressed: () {
                   setState(() {
                     isSearching = true;
+                    bMonth = _currentSelectedMonth;
                     bYear = _currentSelectedYear;
                     bBank = _currentSelectedBank;
                   });
@@ -372,6 +406,9 @@ class _FetchCustomersBankTransactionsYearlyState
                       color: defaultTextColor1),
                 ),
               ),
+            ),
+            const SizedBox(
+              height: 20,
             ),
             isSearching
                 ? const LoadingUi()
@@ -559,6 +596,12 @@ class _FetchCustomersBankTransactionsYearlyState
   void _onDropDownItemSelectedBank(newValueSelected) {
     setState(() {
       _currentSelectedBank = newValueSelected;
+    });
+  }
+
+  void _onDropDownItemSelectedMonth(newValueSelected) {
+    setState(() {
+      _currentSelectedMonth = newValueSelected;
     });
   }
 

@@ -8,24 +8,23 @@ import 'package:flutter/material.dart';
 
 import 'loadingui.dart';
 
-class FetchCustomersBankTransactionsYearly extends StatefulWidget {
-  const FetchCustomersBankTransactionsYearly({Key? key}) : super(key: key);
+class FetchCustomerYearlyOverAllTransactionByBank extends StatefulWidget {
+  const FetchCustomerYearlyOverAllTransactionByBank({Key? key})
+      : super(key: key);
 
   @override
-  State<FetchCustomersBankTransactionsYearly> createState() =>
-      _FetchCustomersBankTransactionsYearlyState();
+  State<FetchCustomerYearlyOverAllTransactionByBank> createState() =>
+      _FetchCustomerYearlyOverAllTransactionByBankState();
 }
 
-class _FetchCustomersBankTransactionsYearlyState
-    extends State<FetchCustomersBankTransactionsYearly> {
-  bool bankSelected = false;
+class _FetchCustomerYearlyOverAllTransactionByBankState
+    extends State<FetchCustomerYearlyOverAllTransactionByBank> {
   final storage = GetStorage();
   late String customerNumber = "";
   var _currentSelectedYear = "2023";
   final _formKey = GlobalKey<FormState>();
 
   late List searchedTransactions = [];
-  List months = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
   List years = [
     "2021",
     "2022",
@@ -39,6 +38,7 @@ class _FetchCustomersBankTransactionsYearlyState
     "2030",
   ];
 
+  String bMonth = "";
   String bYear = "";
   String bBank = "";
 
@@ -50,105 +50,10 @@ class _FetchCustomersBankTransactionsYearlyState
   double sum = 0.0;
   double cashReceived = 0.0;
   var items;
-  final List banks = [
-    "Select bank",
-    "GT Bank",
-    "Access Bank",
-    "Cal Bank",
-    "Fidelity Bank",
-    "Ecobank",
-    "Pan Africa",
-    "SGSSB",
-    "Atwima Rural Bank",
-    "Omnibsic Bank",
-    "Omini bank",
-    "Stanbic Bank",
-    "First Bank of Nigeria",
-    "Adehyeman Savings and loans",
-    "ARB Apex Bank Limited",
-    "Absa Bank",
-    "Agriculture Development bank",
-    "Bank of Africa",
-    "Bank of Ghana",
-    "Consolidated Bank Ghana",
-    "First Atlantic Bank",
-    "First National Bank",
-    "G-Money",
-    "GCB BanK LTD",
-    "Ghana Pay",
-    "GHL Bank Ltd",
-    "National Investment Bank",
-    "Opportunity International Savings And Loans",
-    "Prudential Bank",
-    "Republic Bank Ltd",
-    "Sahel Sahara Bank",
-    "Sinapi Aba Savings and Loans",
-    "Societe Generale Ghana Ltd",
-    "Standard Chartered",
-    "universal Merchant Bank",
-    "Zenith Bank",
-  ];
-  var _currentSelectedBank = "Select bank";
 
-  // fetchUserAccessBankByDate(String dMonth,String dYear)async{
-  //   final url = "https://fnetghana.xyz/get_agents_access_bank_by_date/$username/$dMonth/$dYear/";
-  //   var myLink = Uri.parse(url);
-  //   final response = await http.get(myLink);
-  //
-  //   if(response.statusCode ==200){
-  //     final codeUnits = response.body.codeUnits;
-  //     var jsonData = const Utf8Decoder().convert(codeUnits);
-  //     allTransactions = json.decode(jsonData);
-  //     amounts.assignAll(allTransactions);
-  //     for(var i in amounts){
-  //       sum = sum + double.parse(i['amount']);
-  //     }
-  //     setState(() {
-  //       hasData = true;
-  //     });
-  //   }
-  //   else{
-  //     setState(() {
-  //       hasData = false;
-  //     });
-  //   }
-  //
-  //   setState(() {
-  //     isSearching = false;
-  //     allTransactions = allTransactions;
-  //   });
-  // }
-  // fetchUserCalBankByDate(String dMonth,String dYear)async{
-  //   final url = "https://fnetghana.xyz/get_agents_cal_bank_by_date/$username/$dMonth/$dYear/";
-  //   var myLink = Uri.parse(url);
-  //   final response = await http.get(myLink);
-  //
-  //   if(response.statusCode ==200){
-  //     final codeUnits = response.body.codeUnits;
-  //     var jsonData = const Utf8Decoder().convert(codeUnits);
-  //     allTransactions = json.decode(jsonData);
-  //     amounts.assignAll(allTransactions);
-  //     for(var i in amounts){
-  //       sum = sum + double.parse(i['amount']);
-  //     }
-  //     setState(() {
-  //       hasData = true;
-  //     });
-  //   }
-  //   else{
-  //     setState(() {
-  //       hasData = false;
-  //     });
-  //   }
-  //
-  //   setState(() {
-  //     isSearching = false;
-  //     allTransactions = allTransactions;
-  //   });
-  // }
   Future<void> fetchAgentCashInTransactionsByMonth() async {
     final url =
-        "https://fnetghana.xyz/get_customer_transaction_by_year/$customerNumber/$bYear/$bBank/";
+        "https://fnetghana.xyz/get_customer_transaction_overall_year/$customerNumber/$bYear/";
     var myLink = Uri.parse(url);
     final response = await http.get(myLink);
 
@@ -172,62 +77,6 @@ class _FetchCustomersBankTransactionsYearlyState
     }
   }
 
-  // fetchUserFidelityBankByDate(String dMonth,String dYear)async{
-  //   final url = "https://fnetghana.xyz/get_agents_fidelity_bank_by_date/$username/$dMonth/$dYear/";
-  //   var myLink = Uri.parse(url);
-  //   final response = await http.get(myLink);
-  //
-  //   if(response.statusCode ==200){
-  //     final codeUnits = response.body.codeUnits;
-  //     var jsonData = const Utf8Decoder().convert(codeUnits);
-  //     allTransactions = json.decode(jsonData);
-  //     amounts.assignAll(allTransactions);
-  //     for(var i in amounts){
-  //       sum = sum + double.parse(i['amount']);
-  //     }
-  //     setState(() {
-  //       hasData = true;
-  //     });
-  //   }
-  //   else{
-  //     setState(() {
-  //       hasData = false;
-  //     });
-  //   }
-  //
-  //   setState(() {
-  //     isSearching = false;
-  //     allTransactions = allTransactions;
-  //   });
-  // }
-  // fetchUserGTBankByDate(String dMonth,String dYear)async{
-  //   final url = "https://fnetghana.xyz/get_agents_gt_bank_by_date/$username/$dMonth/$dYear/";
-  //   var myLink = Uri.parse(url);
-  //   final response = await http.get(myLink);
-  //
-  //   if(response.statusCode ==200){
-  //     final codeUnits = response.body.codeUnits;
-  //     var jsonData = const Utf8Decoder().convert(codeUnits);
-  //     allTransactions = json.decode(jsonData);
-  //     amounts.assignAll(allTransactions);
-  //     for(var i in amounts){
-  //       sum = sum + double.parse(i['amount']);
-  //     }
-  //     setState(() {
-  //       hasData = true;
-  //     });
-  //   }
-  //   else{
-  //     setState(() {
-  //       hasData = false;
-  //     });
-  //   }
-  //
-  //   setState(() {
-  //     isSearching = false;
-  //     allTransactions = allTransactions;
-  //   });
-  // }
   @override
   void initState() {
     super.initState();
@@ -245,7 +94,7 @@ class _FetchCustomersBankTransactionsYearlyState
         appBar: AppBar(
           backgroundColor: defaultColor,
           title: const Text(
-            "Search by bank and year",
+            "Search Transactions",
             style: TextStyle(
                 fontWeight: FontWeight.bold, color: defaultTextColor1),
           ),
@@ -253,17 +102,10 @@ class _FetchCustomersBankTransactionsYearlyState
         body: ListView(
           children: [
             const SizedBox(height: 20),
-            Padding(
+            const Padding(
                 padding: EdgeInsets.only(left: 35.0),
                 child: Row(
                   children: [
-                    Expanded(
-                        flex: 2,
-                        child: Text("Bank",
-                            style: TextStyle(fontWeight: FontWeight.bold))),
-                    Expanded(
-                        child: Text("Month",
-                            style: TextStyle(fontWeight: FontWeight.bold))),
                     Expanded(
                         child: Text("Year",
                             style: TextStyle(fontWeight: FontWeight.bold))),
@@ -275,38 +117,6 @@ class _FetchCustomersBankTransactionsYearlyState
                 key: _formKey,
                 child: Row(
                   children: [
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.grey, width: 1)),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 10.0, right: 10),
-                            child: DropdownButton(
-                              hint: const Text("Bank"),
-                              isExpanded: true,
-                              underline: const SizedBox(),
-                              // style: const TextStyle(
-                              //     color: Colors.black, fontSize: 20),
-                              items: banks.map((dropDownStringItem) {
-                                return DropdownMenuItem(
-                                  value: dropDownStringItem,
-                                  child: Text(dropDownStringItem),
-                                );
-                              }).toList(),
-                              onChanged: (newValueSelected) {
-                                _onDropDownItemSelectedBank(newValueSelected);
-                              },
-                              value: _currentSelectedBank,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
@@ -349,7 +159,6 @@ class _FetchCustomersBankTransactionsYearlyState
                   setState(() {
                     isSearching = true;
                     bYear = _currentSelectedYear;
-                    bBank = _currentSelectedBank;
                   });
 
                   if (!_formKey.currentState!.validate()) {
@@ -372,6 +181,9 @@ class _FetchCustomersBankTransactionsYearlyState
                       color: defaultTextColor1),
                 ),
               ),
+            ),
+            const SizedBox(
+              height: 20,
             ),
             isSearching
                 ? const LoadingUi()
@@ -554,12 +366,6 @@ class _FetchCustomersBankTransactionsYearlyState
             : Container(),
       ),
     );
-  }
-
-  void _onDropDownItemSelectedBank(newValueSelected) {
-    setState(() {
-      _currentSelectedBank = newValueSelected;
-    });
   }
 
   void _onDropDownItemSelectedYear(newValueSelected) {
